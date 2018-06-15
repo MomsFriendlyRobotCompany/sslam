@@ -9,18 +9,24 @@ from __future__ import print_function
 from the_collector.bagit import BagReader
 from sslam import LDS01_Model
 from pltslamshow import SlamShow
-from sslam import RMHC_SLAM
+from sslam import RMHC_SLAM, Deterministic_SLAM
 import time
 
 
 if __name__ == '__main__':
-	MAP_SIZE_PIXELS         = 500
-	MAP_SIZE_METERS         = 8
+	MAP_SIZE_PIXELS = 500
+	MAP_SIZE_METERS = 8
 
 	reader = BagReader()
 	data = reader.load('test.json')  # read in the file and conver to dict
 	scans = data['lidar']
-	slam = RMHC_SLAM(LDS01_Model(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
+
+	# pick your version of slam
+	if True:
+		slam = RMHC_SLAM(LDS01_Model(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
+	else:
+		slam = Deterministic_SLAM(LDS01_Model(), MAP_SIZE_PIXELS, MAP_SIZE_METERS)
+
 	display = SlamShow(MAP_SIZE_PIXELS, MAP_SIZE_METERS*1000/MAP_SIZE_PIXELS, 'SLAM')
 
 	# Initialize empty map

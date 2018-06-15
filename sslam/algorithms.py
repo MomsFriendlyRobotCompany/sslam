@@ -28,14 +28,14 @@ class CoreSLAM(object):
 	to run variants of the simple CoreSLAM (tinySLAM) algorithm described in
 
 	 @inproceedings{coreslam-2010,
-	   author    = {Bruno Steux and Oussama El Hamzaoui},
-	   title     = {CoreSLAM: a SLAM Algorithm in less than 200 lines of C code},
-	   booktitle = {11th International Conference on Control, Automation,
+		author    = {Bruno Steux and Oussama El Hamzaoui},
+		title     = {CoreSLAM: a SLAM Algorithm in less than 200 lines of C code},
+		booktitle = {11th International Conference on Control, Automation,
 					Robotics and Vision, ICARCV 2010, Singapore, 7-10
 					December 2010, Proceedings},
-	   pages     = {1975-1979},
-	   publisher = {IEEE},
-	   year      = {2010}
+		pages     = {1975-1979},
+		publisher = {IEEE},
+		year      = {2010}
 	 }
 
 
@@ -114,7 +114,6 @@ class CoreSLAM(object):
 		self.map.set(mapbytes)
 
 	def __str__(self):
-
 		return 'CoreSLAM: {}\n\tmap quality = {} / 255\n\thole width = {:7.0f} mm'.format(str(self.map), self.map_quality, self.hole_width_mm)
 
 	def __repr__(self):
@@ -258,7 +257,6 @@ class RMHC_SLAM(SinglePositionSLAM):
 			self.randomizer)
 
 	def _random_normal(self, mu, sigma):
-
 		return mu + self.randomizer.rnor() * sigma
 
  # Deterministic_SLAM class  ------------------------------------------------------------------------------------
@@ -266,8 +264,7 @@ class RMHC_SLAM(SinglePositionSLAM):
 class Deterministic_SLAM(SinglePositionSLAM):
 	'''
 	Deterministic_SLAM implements the _getNewPosition() method of
-	SinglePositionSLAM by simply
-	copying the search-start position.
+	SinglePositionSLAM by simply copying the search-start position.
 	'''
 
 	def __init__(self, laser, map_size_pixels, map_size_meters,
@@ -284,6 +281,12 @@ class Deterministic_SLAM(SinglePositionSLAM):
 
 		SinglePositionSLAM.__init__(self, laser, map_size_pixels, map_size_meters,
 			map_quality, hole_width_mm)
+
+	def update(self, scan_mm, velocities=None, should_update_map=True):
+		if not velocities:
+			velocities = (0, 0, 0)
+
+		CoreSLAM.update(self, scan_mm, velocities, should_update_map)
 
 	def _getNewPosition(self, start_position):
 		'''
