@@ -831,6 +831,9 @@ PyMODINIT_FUNC initc_sslam(void)
 
 #else
 
+// this is right out of the docs
+// https://docs.python.org/3/extending/extending.html
+
 static PyModuleDef moduledef =
 {
 	PyModuleDef_HEAD_INIT,
@@ -844,22 +847,26 @@ static PyModuleDef moduledef =
 	NULL                // m_free
 };
 
+static PyObject *sslamError;
+
 PyMODINIT_FUNC PyInit_c_sslam(void)
 {
+	PyObject *module;
+	
 	if (!types_are_ready())
 	{
 		return NULL;
 	}
 
-	PyObject* module = PyModule_Create(&moduledef);
+	module = PyModule_Create(&moduledef);
 
-	if (module == NULL)
-	{
-		return NULL;
-	}
+	if (module == NULL) return NULL;
 
 	add_classes(module);
 
+	sslamError = PyErr_NewException("sslam.error", NULL, NULL);
+	Py_INCREF(sslamError);
+	PyModule_AddObject(module, "error", sslamError);
 	return module;
 }
 
